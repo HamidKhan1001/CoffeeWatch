@@ -268,3 +268,21 @@ body.loading{overflow:hidden}
   .toast{bottom:18px}
 }
 @media (max-width:380px){.announce{font-size:12px}.film-panel h1{font-size:36px}.chip{padding:7px 13px}}
+
+/* Immersive film: header slides away, slim HUD stays */
+.announce,.nav{transition:transform .5s cubic-bezier(.2,.7,.2,1),opacity .4s}
+body.immersive:not(.show-nav) .announce{transform:translateY(-100%);opacity:0;pointer-events:none}
+body.immersive:not(.show-nav) .nav{transform:translateY(calc(-100% - 34px));opacity:0;pointer-events:none}
+.film-hud{position:absolute;z-index:5;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;padding:18px 24px;color:#fff;opacity:0;transform:translateY(-12px);pointer-events:none;transition:opacity .5s,transform .5s}
+body.immersive:not(.show-nav) .film-hud{opacity:1;transform:none;pointer-events:auto}
+.hud-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;letter-spacing:-.01em;text-shadow:0 1px 12px rgba(0,0,0,.5)}
+.hud-brand svg{width:26px;height:26px}
+.hud-actions{display:flex;gap:8px;align-items:center}
+.hud-btn{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px;border-radius:99px;font-size:13px;font-weight:600;color:#fff;background:rgba(20,9,10,.35);border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:background .2s,border-color .2s}
+.hud-btn:hover{background:rgba(255,255,255,.16);border-color:#fff}
+.hud-btn svg{display:block}#hudFull{padding:0;width:38px;justify-content:center}
+.hud-btn span{background:#e6a86a;color:#14090a;border-radius:99px;min-width:19px;height:19px;display:grid;place-items:center;font-size:11px}
+@media (max-width:899px){.film-hud{padding:12px 14px}.hud-brand span{display:none}.hud-btn{height:36px;padding:0 13px}#hudFull{width:36px}}
+/* in immersive mode the panels center on the full screen, not below the header */
+body.immersive:not(.show-nav) .film-panel{top:50%}
+@media (max-width:899px){body.immersive:not(.show-nav) .film-panel{top:auto}}

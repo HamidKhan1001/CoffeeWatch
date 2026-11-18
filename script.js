@@ -151,4 +151,35 @@
   subRender();
   $('#subGo').onclick = () => toast(`Subscribed: ${SIZE[sub.s][0]} · ${FREQ[sub.f][0]} · ${ROAST[sub.r]} (demo)`);
   $('#newsForm').onsubmit = e => { e.preventDefault(); e.target.reset(); toast('Welcome to the morning list ☕'); };
+
+  /* ---------- Immersive 3D film: hide header, keep slim HUD ---------- */
+  (() => {
+    const film = $('#film'); if (!film) return;
+    const body = document.body;
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const r = film.getBoundingClientRect();
+      const on = r.top <= 8 && r.bottom >= innerHeight - 8;
+      body.classList.toggle('immersive', on);
+      if (!on) { body.classList.remove('show-nav'); const m = $('#hudMenu'); if (m) m.setAttribute('aria-expanded', 'false'); }
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener('resize', update); addEventListener('loader-done', update); update();
+
+    const menu = $('#hudMenu');
+    menu.onclick = () => { const o = body.classList.toggle('show-nav'); menu.setAttribute('aria-expanded', String(o)); };
+    $('#hudCart').onclick = () => $('#cartBtn').click();
+    const count = $('#cartCount'), hc = $('#hudCount');
+    new MutationObserver(() => { hc.textContent = count.textContent; }).observe(count, { childList: true, characterData: true, subtree: true });
+    hc.textContent = count.textContent;
+
+    const full = $('#hudFull');
+    if (!document.fullscreenEnabled && !document.webkitFullscreenEnabled) full.style.display = 'none';
+    full.onclick = () => {
+      const el = document.documentElement;
+      if (document.fullscreenElement || document.webkitFullscreenElement) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      else (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+    };
+  })();
 })();
