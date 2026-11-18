@@ -1,0 +1,3 @@
+Teacup + saucer: DiffuseTransmissionTeacup, Khronos glTF-Sample-Assets (Polyhaven.com / Eric Chadwick), CC0 1.0
+Vintage electric kettle: Poly Haven, by SV Garip, CC0 1.0
+Studio HDRI (studio_small_09): Poly Haven, CC0 1.0

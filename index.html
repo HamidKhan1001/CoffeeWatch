@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#faf7f2" />
+  <title>Coffee Watch — Specialty Coffee, Precisely Timed</title>
+  <meta name="description" content="Specialty coffee roasted to order and delivered at its peak, plus the tools to brew and manage it." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js","three/addons/":"./vendor/addons/"}}</script>
+  <link rel="modulepreload" href="./vendor/three.module.min.js">
+  <link rel="preload" href="assets/models/teacup.glb" as="fetch" crossorigin>
+  <link rel="preload" href="assets/models/studio.hdr" as="fetch" crossorigin>
+</head>
+<body class="loading">
+  <div class="loader" id="loader" role="status" aria-live="polite">
+    <div class="loader-inner">
+      <svg class="loader-mark" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="1.4"/><ellipse cx="16" cy="16" rx="6" ry="8.5" transform="rotate(35 16 16)" fill="currentColor"/><path d="M12.5 21.5c3-2.5 4-7.5 7-11" stroke="#14090a" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>
+      <p class="loader-name">Coffee Watch</p>
+      <div class="loader-bar"><i id="loaderBar"></i></div>
+      <p class="loader-msg"><span id="loaderMsg">Warming up the cups…</span> <b id="loaderPct">0%</b></p>
+    </div>
+  </div>
+  <div class="announce">Free shipping over $40 · Roasted to order, shipped in 48 hours</div>
+
+  <header class="nav" id="nav">
+    <a class="brand" href="#top" aria-label="Coffee Watch home">
+      <svg class="brand-mark" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="1.6"/><ellipse cx="16" cy="16" rx="6" ry="8.5" transform="rotate(35 16 16)" fill="currentColor"/><path d="M12.5 21.5c3-2.5 4-7.5 7-11" stroke="#faf7f2" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>
+      <span>Coffee Watch</span>
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#shop">Coffee</a>
+      <a href="#subscribe">Subscriptions</a>
+      <a href="#origins">Origins</a>
+      <a href="#lab">Brew Lab</a>
+      <a href="#journal">Journal</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="cart-btn" id="cartBtn" aria-label="Open cart">Cart <span id="cartCount">0</span></button>
+      <button class="burger" id="burger" aria-label="Menu"><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="film" id="film">
+      <div class="film-pin">
+        <canvas id="filmCanvas" aria-label="Interactive 3D scene: a teacup and a pour-over kettle"></canvas>
+        <div class="film-shade"></div>
+
+        <div class="film-panel p0" data-a="-1" data-b="0.17">
+          <p class="kicker">Roasted this week · Yirgacheffe, Ethiopia</p>
+          <h1>Coffee, roasted<br>to the minute.</h1>
+          <p class="lead">Single-origin specialty coffee, roasted to order and delivered at its peak.</p>
+          <div class="cta-row"><a class="btn light" href="#shop">Shop coffee</a><a class="btn outline-light" href="#subscribe">Start a subscription</a></div>
+        </div>
+        <div class="film-panel p1" data-a="0.17" data-b="0.4"><span>01</span><h3>Roasted to order</h3><p>Every bag is roasted the day your order is built — never from a shelf.</p></div>
+        <div class="film-panel p2 right" data-a="0.4" data-b="0.62"><span>02</span><h3>Rested to its peak</h3><p>We hold each lot four days, then ship it to land inside its 21-day window.</p></div>
+        <div class="film-panel p3" data-a="0.62" data-b="0.86"><span>03</span><h3>Brewed with intent</h3><p>Dial in with our Brew Lab: dose, ratio, temperature and a timer, in one place.</p><a class="btn light sm" href="#lab">Open the Brew Lab</a></div>
+        <div class="film-panel p4 center" data-a="0.86" data-b="2"><h3>Your first bag is on us.</h3><p>Start a subscription and we'll add a free 250 g of our current favourite.</p><a class="btn light" href="#subscribe">Claim it</a></div>
+
+        <div class="film-hint"><span></span>Scroll</div>
+        <div class="film-bar"><i id="filmBar"></i></div>
+        
+      </div>
+    </section>
+
+    <section class="tiles wrap">
+      <a class="tile" href="#shop"><img src="assets/yirg.jpg" alt="" loading="lazy"><span>Shop coffee</span></a>
+      <a class="tile" href="#subscribe"><img src="assets/beans.jpg" alt="" loading="lazy"><span>Subscriptions</span></a>
+      <a class="tile" href="#lab"><img src="assets/barista.jpg" alt="" loading="lazy"><span>Brew Lab</span></a>
+    </section>
+
+        <section class="shop" id="shop">
+      <div class="wrap">
+        <div class="section-head">
+          <div><p class="kicker dark">Fresh this week</p><h2>Single-origin coffee</h2></div>
+          <div class="chips" id="shopFilters"></div>
+        </div>
+        <div class="grid" id="productGrid"></div>
+      </div>
+    </section>
+
+    <section class="story" id="story">
+      <div class="wrap split">
+        <img src="assets/roastery.jpg" alt="Roasting beans in the Coffee Watch roastery" loading="lazy">
+        <div>
+          <p class="kicker dark">Our roastery</p>
+          <h2>Small batches, roasted to order.</h2>
+          <p class="body">We roast 5 kg at a time, log every curve and rest every lot before it ships. Nothing sits on a shelf — every bag leaves inside its peak window, four to twenty-one days after roasting.</p>
+          <a class="link" href="#journal">Read about our process →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="origins" id="origins">
+      <div class="wrap split rev">
+        <div>
+          <p class="kicker dark">Where it comes from</p>
+          <h2>Five origins, traced to the farm.</h2>
+          <p class="body">Every lot is cupped and scored above 86 before it earns a place on our shelf. Pick an origin to see where it grows.</p>
+          <div class="chips" id="originList" role="tablist"></div>
+          <div class="origin-card" id="originCard" aria-live="polite"></div>
+        </div>
+        <img src="assets/cups.jpg" alt="Washed and natural coffees side by side" loading="lazy">
+      </div>
+    </section>
+
+    <section class="lab" id="lab">
+      <div class="wrap">
+        <div class="section-head">
+          <div><p class="kicker dark">Brew Lab</p><h2>Brew it right. Run it well.</h2></div>
+          <p class="body">The tools our roasters use: a recipe calculator, a brew timer with a log, live roast freshness and stock.</p>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><span>Revenue today</span><b data-count="2486" data-prefix="$" data-sep="1">$2,486</b><em class="up">▲ 12.4%</em></div>
+          <div class="kpi"><span>Cups served</span><b data-count="312">312</b><em class="up">▲ 28 / hr peak</em></div>
+          <div class="kpi"><span>Avg. extraction</span><b data-count="27.4" data-dec="1" data-suffix="s">27.4s</b><em>target 25–30s</em></div>
+          <div class="kpi"><span>Waste</span><b data-count="3.1" data-dec="1" data-suffix="%">3.1%</b><em class="up">▼ 0.8 pts</em></div>
+        </div>
+
+        <div class="lab-grid">
+          <article class="panel" id="recipe">
+            <header><h3>Recipe &amp; timer</h3></header>
+            <div class="chips" id="methodChips"></div>
+            <label class="slider">
+              <span>Dose <b id="doseVal">18 g</b></span>
+              <input type="range" id="dose" min="10" max="40" step="0.5" value="18">
+            </label>
+            <div class="recipe-out">
+              <div><span>Water</span><b id="outWater">36 g</b></div>
+              <div><span>Ratio</span><b id="outRatio">1 : 2</b></div>
+              <div><span>Temp</span><b id="outTemp">93 °C</b></div>
+              <div><span>Grind</span><b id="outGrind">Fine</b></div>
+            </div>
+            <div class="timer">
+              <svg viewBox="0 0 160 160" class="timer-ring">
+                <circle cx="80" cy="80" r="70" class="tr-bg"/>
+                <circle cx="80" cy="80" r="70" class="tr-fg" id="trFg"/>
+                <g id="trTicks"></g>
+              </svg>
+              <div class="timer-read"><b id="timerRead">00:00</b><span id="timerTarget">target 0:28</span></div>
+            </div>
+            <div class="cta-row">
+              <button class="btn dark sm" id="timerStart">Start</button>
+              <button class="btn outline sm" id="timerReset">Reset</button>
+              <button class="btn outline sm" id="timerLog">Log brew</button>
+            </div>
+            <div class="stars" id="stars" aria-label="Rating"></div>
+            <ul class="brewlog" id="brewLog"></ul>
+          </article>
+
+          <article class="panel" id="roastWatch">
+            <header><h3>Roast watch</h3></header>
+            <p class="muted sm-text">Resting: days 0–3 · <b class="peak-c">Peak: days 4–21</b> · Fading after.</p>
+            <div id="batches"></div>
+          </article>
+
+          <article class="panel" id="throughput">
+            <header><h3>Cups per hour</h3></header>
+            <div class="bars" id="bars"></div>
+            <div class="bar-axis"><span>7a</span><span>9a</span><span>11a</span><span>1p</span><span>3p</span><span>5p</span></div>
+            <div class="insight"><b>Insight</b><p>Rush hits at 9–10 am. Pre-grind 40 doses at 8:45 to cut average wait by ~35 s.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="subscribe" id="subscribe">
+      <div class="wrap split">
+        <img src="assets/gesha.jpg" alt="Coffee Watch bag" loading="lazy">
+        <div>
+          <p class="kicker dark">Subscriptions</p>
+          <h2>Never run out. Never go stale.</h2>
+          <p class="body">We roast the day your order is built and ship it to land at peak. Save 10%, skip or pause any time.</p>
+          <div class="sub-builder">
+            <div class="field"><label>Frequency</label><div class="chips" id="subFreq"></div></div>
+            <div class="field"><label>Bag size</label><div class="chips" id="subSize"></div></div>
+            <div class="field"><label>Roast</label><div class="chips" id="subRoast"></div></div>
+            <div class="sub-total">
+              <div><span class="was" id="subWas">$20</span><b id="subPrice">$18</b><small>/ delivery · free shipping</small></div>
+              <p id="subNext"></p>
+            </div>
+            <button class="btn dark full" id="subGo">Start my subscription</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="journal" id="journal">
+      <div class="wrap">
+        <div class="section-head">
+          <div><p class="kicker dark">Journal</p><h2>Notes from the roastery</h2></div>
+        </div>
+        <div class="cards">
+          <a class="card" href="#journal"><div class="card-art"><img src="assets/resting.jpg" alt="" loading="lazy"></div><span class="tag">Freshness · 5 min</span><h3>The 21-day rule: why coffee has a peak</h3><p>CO₂, aroma and the quiet science of resting beans.</p></a>
+          <a class="card" href="#journal"><div class="card-art"><img src="assets/cups.jpg" alt="" loading="lazy"></div><span class="tag">Process · 7 min</span><h3>Washed vs natural, in one cup</h3><p>Two ways to dry a cherry — and two very different mornings.</p></a>
+          <a class="card" href="#journal"><div class="card-art"><img src="assets/barista.jpg" alt="" loading="lazy"></div><span class="tag">Technique · 4 min</span><h3>Dialing in: a five-minute method</h3><p>Taste, adjust, repeat. A calm routine for any grinder.</p></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="foot-top">
+        <div>
+          <h3>Join the morning list</h3>
+          <p class="muted">New roasts, brew guides and offers. No spam.</p>
+          <form class="news" id="newsForm"><input type="email" placeholder="Email address" required aria-label="Email"><button class="btn light">Subscribe</button></form>
+        </div>
+        <div class="foot-cols">
+          <div><b>Shop</b><a href="#shop">Coffee</a><a href="#subscribe">Subscriptions</a><a href="#shop">Gifts</a></div>
+          <div><b>Explore</b><a href="#origins">Origins</a><a href="#lab">Brew Lab</a><a href="#journal">Journal</a></div>
+          <div><b>Visit</b><a href="#">Roastery &amp; bar</a><a href="#">Wholesale</a><a href="#">Contact</a></div>
+        </div>
+      </div>
+      <div class="foot-bot"><span>© 2026 Coffee Watch</span><span>Prices in USD · Demo storefront</span></div>
+    </div>
+  </footer>
+
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="drawer" aria-label="Cart">
+    <header><h3>Your cart</h3><button id="closeCart" aria-label="Close">✕</button></header>
+    <div class="ship"><p id="shipMsg"></p><div class="ship-bar"><i id="shipFill"></i></div></div>
+    <div class="drawer-items" id="cartItems"></div>
+    <footer>
+      <div class="sub-row"><span>Subtotal</span><b id="cartTotal">$0</b></div>
+      <button class="btn dark full" id="checkout">Checkout</button>
+    </footer>
+  </aside>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="script.js"></script>
+  <script>
+  /* Loading screen: tracks the 3D scene's real progress, never blocks forever */
+  (() => {
+    try { history.scrollRestoration = 'manual'; } catch (e) {}
+    scrollTo(0, 0);
+    const el = document.getElementById('loader'), bar = document.getElementById('loaderBar'), pct = document.getElementById('loaderPct'), msg = document.getElementById('loaderMsg');
+    const t0 = performance.now(); let shown = 0, target = 0, done = false;
+    const lines = [[0, 'Warming up the cups…'], [30, 'Loading the kettle…'], [60, 'Setting the lights…'], [90, 'Pouring the latte…']];
+    window.addEventListener('film-progress', e => { target = Math.max(target, Math.min(1, e.detail) * 100); });
+    function finish() {
+      if (done) return; done = true; target = 100;
+      const wait = Math.max(0, 700 - (performance.now() - t0));
+      setTimeout(() => { el.classList.add('done'); document.body.classList.remove('loading'); scrollTo(0, 0); window.dispatchEvent(new Event('loader-done')); setTimeout(() => el.remove(), 900); }, wait);
+    }
+    window.addEventListener('film-ready', finish); window.addEventListener('film-fail', finish);
+    setTimeout(finish, 30000); /* safety net on very slow connections */
+    setTimeout(() => { if (target === 0) finish(); }, 7000); /* 3D script never started: show the page anyway */
+    (function tick() {
+      shown += (target - shown) * 0.08 + (target > shown ? 0.15 : 0);
+      if (shown > target) shown = target;
+      bar.style.transform = 'scaleX(' + (shown / 100) + ')'; pct.textContent = Math.round(shown) + '%';
+      for (const [at, t] of lines) if (shown >= at) msg.textContent = t;
+      if (!done || shown < 99.5) requestAnimationFrame(tick);
+    })();
+  })();
+  </script>
+  <script type="module" src="film.js"></script>
+</body>
+</html>
